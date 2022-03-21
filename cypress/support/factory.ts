@@ -11,7 +11,7 @@ export function factory({
 }) {
   const args = `${type} ${attrs ? JSON.stringify(attrs) : "{}"}`;
   cy.exec(
-    `node --require esbuild-register ./cypress/support/factory.ts ${args}`
+    `node --require esbuild-register ./cypress/support/runFactory.ts ${args}`
   ).then(({ stdout }) => {
     cy.then(() => JSON.parse(stdout)).as(name);
   });
