@@ -8,11 +8,14 @@ export function factory({
   name: string;
   type: FactoryNames;
   attrs?: Record<string, any>;
-}) {
-  const args = `${type} ${attrs ? JSON.stringify(attrs) : "{}"}`;
+}): any {
+  const args = `${type} '${
+    attrs ? JSON.stringify(attrs) : JSON.stringify({})
+  }'`;
   cy.exec(
     `node --require esbuild-register ./cypress/support/runFactory.ts ${args}`
   ).then(({ stdout }) => {
     cy.then(() => JSON.parse(stdout)).as(name);
   });
+  return cy.get(`@${name}`);
 }

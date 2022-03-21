@@ -1,3 +1,4 @@
+import { data, resetDB } from "./data";
 import { factory } from "./factory";
 import { cleanupUser, login } from "./user-commands";
 
@@ -36,6 +37,24 @@ declare global {
        *    cy.factory({ name: 'project1', type: 'Project', attrs: {} })
        */
       factory: typeof factory;
+      /**
+       * Gets objects created from Prisma factories
+       *
+       * @returns {typeof data}
+       * @memberof Chainable
+       * @example
+       *    cy.data("project1")
+       */
+      data: typeof data;
+      /**
+       * Gets objects created from Prisma factories
+       *
+       * @returns {typeof resetDB}
+       * @memberof Chainable
+       * @example
+       *    cy.resetDB()
+       */
+      resetDB: typeof resetDB;
     }
   }
 }
@@ -43,8 +62,8 @@ declare global {
 Cypress.Commands.add("login", login);
 Cypress.Commands.add("cleanupUser", cleanupUser);
 Cypress.Commands.add("factory", factory);
-
-/*
+Cypress.Commands.add("data", data);
+Cypress.Commands.add("resetDB", resetDB); /*
 eslint
   @typescript-eslint/no-namespace: "off",
 */

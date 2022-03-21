@@ -1,4 +1,25 @@
-module.exports = (
+/// <reference types="cypress" />
+
+// import 'cypress';
+import { truncateDB } from "@/test/helpers/truncateDB";
+
+declare global {
+  // eslint-disable-next-line
+  namespace Cypress {
+    interface Chainable<Subject = any> {
+      task<T>(
+        event: string,
+        arg?: any,
+        options?: Partial<Loggable & Timeoutable>
+      ): Chainable<T>;
+    }
+  }
+}
+
+/**
+ * @type {Cypress.PluginConfig}
+ */
+export default (
   on: Cypress.PluginEvents,
   config: Cypress.PluginConfigOptions
 ) => {
@@ -6,7 +27,6 @@ module.exports = (
   const port = process.env.PORT ?? (isDev ? "3000" : "8811");
   const configOverrides: Partial<Cypress.PluginConfigOptions> = {
     baseUrl: `http://localhost:${port}`,
-    integrationFolder: "cypress/e2e",
     video: !process.env.CI,
     screenshotOnRunFailure: !process.env.CI,
   };
@@ -17,6 +37,10 @@ module.exports = (
   on("task", {
     log(message) {
       console.log(message);
+      return null;
+    },
+    async resetDB() {
+      await truncateDB();
       return null;
     },
   });
