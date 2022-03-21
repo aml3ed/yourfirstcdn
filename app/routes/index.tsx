@@ -1,5 +1,5 @@
 import { Link } from "remix";
-import { useOptionalUser } from "~/utils";
+import { useOptionalUser } from "~/helpers/helpers";
 
 export default function Index() {
   const user = useOptionalUser();

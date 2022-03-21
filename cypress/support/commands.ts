@@ -1,4 +1,5 @@
-import faker from "@faker-js/faker";
+import { FactoryNames } from "../../test/factories";
+import { cleanupUser, login } from "./user-commands";
 
 declare global {
   namespace Cypress {
@@ -26,52 +27,44 @@ declare global {
        *    cy.cleanupUser({ email: 'whatever@example.com' })
        */
       cleanupUser: typeof cleanupUser;
+      /**
+       * Deletes the current @user
+       *
+       * @returns {typeof factory}
+       * @memberof Chainable
+       * @example
+       *    cy.factory({ name: 'project1', type: 'Project', attrs: {} })
+       */
+      factory: typeof factory;
     }
   }
 }
 
-function login({
-  email = faker.internet.email(undefined, undefined, "example.com"),
-}: {
-  email?: string;
-} = {}) {
-  cy.then(() => ({ email })).as("user");
-  cy.exec(
-    `node --require esbuild-register ./cypress/support/create-user.ts "${email}"`
-  ).then(({ stdout }) => {
-    const cookieValue = stdout
-      .replace(/.*<cookie>(?<cookieValue>.*)<\/cookie>.*/s, "$<cookieValue>")
-      .trim();
-    cy.setCookie("__session", cookieValue);
-  });
-  return cy.get("@user");
-}
-
-function cleanupUser({ email }: { email?: string } = {}) {
-  if (email) {
-    deleteUserByEmail(email);
-  } else {
-    cy.get("@user").then((user) => {
-      const email = (user as { email?: string }).email;
-      if (email) {
-        deleteUserByEmail(email);
-      }
-    });
-  }
-  cy.clearCookie("__session");
-}
-
-function deleteUserByEmail(email: string) {
-  cy.exec(
-    `node --require esbuild-register ./cypress/support/delete-user.ts "${email}"`
-  );
-  cy.clearCookie("__session");
-}
-
 Cypress.Commands.add("login", login);
 Cypress.Commands.add("cleanupUser", cleanupUser);
+Cypress.Commands.add("factory", factory);
 
 /*
 eslint
   @typescript-eslint/no-namespace: "off",
 */
+
+function factory({
+  name,
+  type,
+  attrs,
+}: {
+  name: string;
+  type: FactoryNames;
+  attrs?: Record<string, any>;
+}) {
+  console.log(attrs);
+  const args = `${type} ${attrs ? JSON.stringify(attrs) : "{}"}`;
+  console.log(args);
+  cy.exec(
+    `node --require esbuild-register ./cypress/support/factory.ts ${args}`
+  ).then(({ stdout }) => {
+    console.log(stdout);
+    cy.then(() => JSON.parse(stdout)).as(name);
+  });
+}

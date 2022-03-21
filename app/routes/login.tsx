@@ -11,7 +11,7 @@ import {
 
 import { createUserSession, getUserId } from "~/session.server";
 import { verifyLogin } from "~/models/user.server";
-import { validateEmail } from "~/utils";
+import { validateEmail } from "~/helpers/helpers";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);

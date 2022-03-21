@@ -12,7 +12,7 @@ import {
 import { getUserId, createUserSession } from "~/session.server";
 
 import { createUser, getUserByEmail } from "~/models/user.server";
-import { validateEmail } from "~/utils";
+import { validateEmail } from "~/helpers/helpers";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
