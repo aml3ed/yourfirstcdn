@@ -3,6 +3,7 @@ import { File, Project } from "@prisma/client";
 describe("API", () => {
   beforeEach(() => {
     cy.resetDB();
+    cy.login();
   });
 
   it("should retrieve file from project if present", () => {

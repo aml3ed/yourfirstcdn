@@ -1,7 +1,10 @@
 /// <reference types="cypress" />
 
 // import 'cypress';
+import { Factories, FactoryNames } from "@/test/factories";
 import { truncateDB } from "@/test/helpers/truncateDB";
+import { Project } from "@prisma/client";
+import { setupUserSession } from "./authentication";
 
 declare global {
   // eslint-disable-next-line
@@ -43,6 +46,21 @@ export default (
       await truncateDB();
       return null;
     },
+    async factory({
+      name,
+      type,
+      attrs,
+    }: {
+      name: string;
+      type: FactoryNames;
+      attrs?: Record<string, any>;
+    }) {
+      const Factory = Factories[type];
+      if (!Factory) throw new Error(`Factory ${type} not found.`);
+      const object = await Factory.create(attrs);
+      return object as Project;
+    },
+    setupUserSession,
   });
 
   return config;

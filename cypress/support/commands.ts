@@ -1,12 +1,11 @@
-import { data, resetDB } from "./data";
-import { factory } from "./factory";
-import { cleanupUser, login } from "./user-commands";
+import { data, factoryTask, resetDB } from "./data";
+import { login, user } from "./auth-commands";
 
 declare global {
   namespace Cypress {
     interface Chainable {
       /**
-       * Logs in with a random user. Yields the user and adds an alias to the user
+       * Logs in with a random user. Yields the user and adds an alias to the user called authUser
        *
        * @returns {typeof login}
        * @memberof Chainable
@@ -16,27 +15,24 @@ declare global {
        *    cy.login({ email: 'whatever@example.com' })
        */
       login: typeof login;
-
       /**
-       * Deletes the current @user
+       * Returns the logged in user.
        *
-       * @returns {typeof cleanupUser}
+       * @returns {typeof user}
        * @memberof Chainable
        * @example
-       *    cy.cleanupUser()
-       * @example
-       *    cy.cleanupUser({ email: 'whatever@example.com' })
+       *    cy.user()
        */
-      cleanupUser: typeof cleanupUser;
+      user: typeof user;
       /**
        * Creates objects using Prisma factories
        *
-       * @returns {typeof factory}
+       * @returns {typeof factoryTask}
        * @memberof Chainable
        * @example
        *    cy.factory({ name: 'project1', type: 'Project', attrs: {} })
        */
-      factory: typeof factory;
+      factory: typeof factoryTask;
       /**
        * Gets objects created from Prisma factories
        *
@@ -60,10 +56,11 @@ declare global {
 }
 
 Cypress.Commands.add("login", login);
-Cypress.Commands.add("cleanupUser", cleanupUser);
-Cypress.Commands.add("factory", factory);
+Cypress.Commands.add("user", user);
+Cypress.Commands.add("factory", factoryTask);
 Cypress.Commands.add("data", data);
-Cypress.Commands.add("resetDB", resetDB); /*
+Cypress.Commands.add("resetDB", resetDB);
+/*
 eslint
   @typescript-eslint/no-namespace: "off",
 */
