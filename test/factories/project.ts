@@ -1,6 +1,6 @@
+import faker from "@faker-js/faker";
 import { Prisma } from "@prisma/client";
 import { prisma } from "~/db.server";
-import faker from "@faker-js/faker";
 
 export const ProjectFactory = {
   build: (attrs: Partial<Prisma.ProjectCreateInput> = {}) => {
