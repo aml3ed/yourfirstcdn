@@ -1,4 +1,3 @@
-import { FactoryNames } from "../../test/factories";
 import { factory } from "./factory";
 import { cleanupUser, login } from "./user-commands";
 
