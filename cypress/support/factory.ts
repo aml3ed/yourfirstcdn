@@ -1,11 +1,18 @@
-import { installGlobals } from "@remix-run/node/globals";
-import { Factories } from "../../test/factories";
+import { FactoryNames } from "../../test/factories";
 
-installGlobals();
-
-async function runFactory(factory: string, attrs: string) {
-  const createInput = JSON.parse(attrs) || null;
-  console.log(JSON.stringify(await Factories[factory].create(createInput)));
+export function factory({
+  name,
+  type,
+  attrs,
+}: {
+  name: string;
+  type: FactoryNames;
+  attrs?: Record<string, any>;
+}) {
+  const args = `${type} ${attrs ? JSON.stringify(attrs) : "{}"}`;
+  cy.exec(
+    `node --require esbuild-register ./cypress/support/factory.ts ${args}`
+  ).then(({ stdout }) => {
+    cy.then(() => JSON.parse(stdout)).as(name);
+  });
 }
-
-runFactory(process.argv[2], process.argv[3]);

@@ -1,4 +1,5 @@
 import { FactoryNames } from "../../test/factories";
+import { factory } from "./factory";
 import { cleanupUser, login } from "./user-commands";
 
 declare global {
@@ -28,7 +29,7 @@ declare global {
        */
       cleanupUser: typeof cleanupUser;
       /**
-       * Deletes the current @user
+       * Creates objects using Prisma factories
        *
        * @returns {typeof factory}
        * @memberof Chainable
@@ -48,23 +49,3 @@ Cypress.Commands.add("factory", factory);
 eslint
   @typescript-eslint/no-namespace: "off",
 */
-
-function factory({
-  name,
-  type,
-  attrs,
-}: {
-  name: string;
-  type: FactoryNames;
-  attrs?: Record<string, any>;
-}) {
-  console.log(attrs);
-  const args = `${type} ${attrs ? JSON.stringify(attrs) : "{}"}`;
-  console.log(args);
-  cy.exec(
-    `node --require esbuild-register ./cypress/support/factory.ts ${args}`
-  ).then(({ stdout }) => {
-    console.log(stdout);
-    cy.then(() => JSON.parse(stdout)).as(name);
-  });
-}
