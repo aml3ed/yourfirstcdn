@@ -1,3 +1,4 @@
+import { CatchBoundaryComponent } from "@remix-run/react/routeModules";
 import { Link } from "remix";
 import { useOptionalUser } from "~/helpers/helpers";
 

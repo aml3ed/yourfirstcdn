@@ -9,7 +9,7 @@ import {
   useActionData,
 } from "remix";
 
-import { getUserId, createUserSession } from "~/session.server";
+import { getUserId, createUserSession } from "~/auth.server";
 
 import { createUser, getUserByEmail } from "~/models/user.server";
 import { validateEmail } from "~/helpers/helpers";
